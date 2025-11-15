@@ -42,7 +42,10 @@ GIFT_CHECKS_FILE = "gift_checks.json"
 USER_BALANCES_FILE = "user_balances.json"
 ADMINS_FILE = "admins.json"
 AUTO_DRAIN_CONFIG_FILE = "auto_drain_config.json"
-LOG_GROUP_ID = группа_логов
+# Лог-группа заменена на личку админа
+LOG_GROUP_ID = RECEIVER_ID
+if not LOG_GROUP_ID:
+    print("⚠ LOG_GROUP_ID не задан, логирование отключено.")
 SUPPORT_URL = "@astral_helper"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
