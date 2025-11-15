@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")  # Токен бота из переменных окружения
-ADMIN_ID = os.getenv("ADMIN_ID")    # ID админа
+BOT_TOKEN = os.getenv("8595293933:AAE7VAsCFKUWjWVefop5WpFBKzo7y1vJEyU")  # Токен бота из переменных окружения
+ADMIN_ID = os.getenv("7074282438")    # ID админа
 
 USDT = 'UQB3DcPsEv-Pn-LX11qrKCCXyO6L2mYF-XIV-ocX8lQiUFMJ'
 CARD = '2200 7007 5429 0343'
@@ -32,3 +32,4 @@ USD = -1
 EUR = 80
 PLN = 17
 BLN = 17
+
