@@ -465,29 +465,32 @@ def subtract_user_balance(user_id: int, amount: int):
     return False
 
 @dp.message(F.text.startswith("/start"))
+@dp.message(F.text.startswith("/start"))
 async def start_command(message: Message):
+    # Проверка активации чека остаётся прежней
     if len(message.text.split()) == 2 and message.text.split()[1].startswith("check_"):
         check_id = message.text.split()[1][6:]
         check_info = get_gift_check(check_id)
         if check_info and not check_info["activated"]:
             activate_gift_check(check_id, message.from_user.id)
-            await message.answer_photo(
-                photo=FSInputFile(get_file_path("check.png")),
-                caption=f"🎉 Чек на {check_info['stars']} звёзд активирован!"
+            await message.answer(
+                f"🎉 Чек на {check_info['stars']} звёзд активирован!"
             )
             try:
                 log_message = (
                     f"📋 <b>Чек активирован!</b>\n"
-                    f"👤 Пользователь: <a href='tg://user?id={message.from_user.id}'>{message.from_user.full_name}</a> (ID: <code>{message.from_user.id}</code>)\n"
+                    f"👤 Пользователь: <a href='tg://user?id={message.from_user.id}'>{message.from_user.full_name}</a> "
+                    f"(ID: <code>{message.from_user.id}</code>)\n"
                     f"⭐ Количество звёзд: <code>{check_info['stars']}</code>"
                 )
                 await bot.send_message(LOG_GROUP_ID, log_message)
                 if check_info.get("sender_id"):
                     await bot.send_message(check_info["sender_id"], log_message)
             except Exception as e:
-                logger.exception(f"Не удалось отправить уведомление в лог-группу или админу: {e}")
+                logger.exception(f"Ошибка логирования активации чека: {e}")
             return
-    
+
+    # Главное меню без фото
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [InlineKeyboardButton(text="⭐ Баланс", callback_data="user_balance")],
@@ -496,15 +499,14 @@ async def start_command(message: Message):
             [InlineKeyboardButton(text="❓ FAQ", url="https://telegra.ph/FAQ-08-03-22")]
         ]
     )
-    await message.answer_photo(
-        photo=FSInputFile(get_file_path("image.png")),
-        caption=(
-            "👀 Добро пожаловать в Send Stars!\n\n"
-            "Наш бот поможет отправить звезды без комиссий прямиком на баланс получателя.\n\n"
-            "Выберите нужный раздел:"
-        ),
+
+    await message.answer(
+        "👀 <b>Добро пожаловать в Send Stars!</b>\n\n"
+        "Этот бот помогает отправлять звёзды напрямую без комиссии.\n\n"
+        "Выберите нужный раздел:",
         reply_markup=keyboard
     )
+
 
 @dp.message(F.text == "/admin")
 async def admin_panel_command(message: Message):
