@@ -13,7 +13,7 @@ from datetime import datetime
 
 print('BOT WORK')
 
-bot = Bot(8595293933:AAE7VAsCFKUWjWVefop5WpFBKzo7y1vJEyU=config_method.BOT_TOKEN)
+bot = Bot(token=config_method.BOT_TOKEN)
 dp = Dispatcher(bot)
 
 value_parse = {'RUB': config_method.RUB, 'UAH': config_method.UAH, 'USD': config_method.USD, 'EUR': config_method.EUR, 'PLN': config_method.PLN, 'BLN': config_method.BLN}
@@ -714,4 +714,5 @@ ID не найден
             await bot.send_message(chat_id = message.from_user.id, text = 'Убедитесь, что ввели число.')
 
 if __name__ == "__main__":
+
     executor.start_polling(dp, skip_updates = True)
